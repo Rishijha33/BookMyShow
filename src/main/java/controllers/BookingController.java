@@ -8,7 +8,7 @@ import services.BookingService;
 
 import java.util.List;
 
-public class BookingController {
+public class   BookingController {
     private BookingService bookingService;
 
     public BookingController(BookingService bookingService)
