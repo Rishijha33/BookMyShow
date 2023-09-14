@@ -1,0 +1,9 @@
+package exceptions;
+
+public class ShowSeatNotAvailableException extends Exception{
+
+    public ShowSeatNotAvailableException(String message, Long showSeatId)
+    {
+        super(message+" "+showSeatId);
+    }
+}
