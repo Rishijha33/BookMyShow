@@ -10,5 +10,6 @@ import lombok.Setter;
 public class User extends BaseModel{
     private String name;
     private String emailId;
+    private String password;
 
 }

@@ -19,12 +19,15 @@ public class BookingService {
     private UserRepository userRepository;
     private ShowRepository showRepository;
     private ShowSeatRepository showSeatRepository;
+    private PriceCalculatorService priceCalculatorService;
 
-    public BookingService(UserRepository userRepository, ShowRepository showRepository, ShowSeatRepository showSeatRepository)
+    public BookingService(UserRepository userRepository, ShowRepository showRepository,
+                          ShowSeatRepository showSeatRepository, PriceCalculatorService priceCalculatorService)
     {
         this.userRepository = userRepository;
         this.showRepository = showRepository;
         this.showSeatRepository = showSeatRepository;
+        this.priceCalculatorService = priceCalculatorService;
     }
     @Transactional(isolation = Isolation.SERIALIZABLE) //Anything inside this method will be in the lock
     public Booking bookMovie(Long userId, Long showId, List<Long> showSeatIds) throws ShowSeatNotAvailableException {
@@ -65,7 +68,7 @@ public class BookingService {
         {
             throw new InvalidShowException("Invalid ShowId");
         }
-
+        Show bookedShow = optionalShow.get();
         //3. Get the List of showSeats from the List of showSeatIds from the DB
         List<ShowSeat> showSeats = showSeatRepository.findAllById(showSeatIds);
 
@@ -94,17 +97,10 @@ public class BookingService {
         booking.setCreatedAt(new Date());
         booking.setUser(bookedBy);
         booking.setShowSeats(showSeats);
-
         //calculate the amount from the showseattype class and set the amount here
+        booking.setAmount(priceCalculatorService.calculatePrice(showSeats, bookedShow));
 
-
-
-
-
-
-
-
-
+        return booking;
 
     }
 
